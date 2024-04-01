@@ -1,0 +1,57 @@
+version: "3.4"
+
+networks:
+    voicenet:
+        driver: ipvlan
+        ipam:
+          config:
+            - subnet: 172.28.0.0/16
+        driver_opts:
+            com.docker.network.enable_ipv6: "true"
+            com.docker.network.bridge.name: "br-freeswitch" 
+
+services:
+
+# $ Softphone running on the Browser
+  softphone:
+    image: nginx:latest
+    container_name: verto-phone
+    ports:
+      - 8080:80
+    volumes:
+      - ./verto-client/demo:/usr/share/nginx/html
+    restart: always
+
+# $ Softswitch running on Docker
+  freeswitch:
+    image: greicodex/freeswitch
+    build:
+      dockerfile: docker/Dockerfile   
+    container_name: FS0
+    tty: true
+#    stdin_open: true
+    logging:
+       options:
+         max-size: 50m
+    ports:
+      - 15060:5060
+      - 15061:5061
+      - 15080:5080
+      - 15081:5081
+      - 7443/tcp
+      - 8021/tcp #fs_cli
+      - 8082 # verto wss
+      - 16384-16394/udp #rtp
+#    network_mode: host
+    networks:
+        voicenet:
+          ipv4_address: 172.28.0.5
+    environment:
+      SOUND_RATES: "8000"
+      SOUND_TYPES: "en-us-allison"
+      EPMD: "false"
+      DUMPCAP: "false"
+    volumes:
+      - ./config:/etc/freeswitch
+      - ./sounds:/usr/share/freeswitch/sounds
+      - ./tmp:/tmp

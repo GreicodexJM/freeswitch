@@ -1,0 +1,3 @@
+[submodule "verto-client"]
+	path = verto-client
+	url = https://github.com/freeswitch/verto-client.git
