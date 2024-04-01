@@ -1,3 +1,6 @@
 [submodule "verto-client"]
 	path = verto-client
 	url = https://github.com/freeswitch/verto-client.git
+[submodule "ctxSip"]
+	path = ctxSip
+	url = https://github.com/Collecttix/ctxSip

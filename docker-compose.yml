@@ -3,9 +3,11 @@ version: "3.4"
 networks:
     voicenet:
         driver: ipvlan
+        enable_ipv6: false
         ipam:
           config:
             - subnet: 172.28.0.0/16
+            - gateway: 172.28.0.1
         driver_opts:
             com.docker.network.enable_ipv6: "true"
             com.docker.network.bridge.name: "br-freeswitch" 
@@ -14,12 +16,15 @@ services:
 
 # $ Softphone running on the Browser
   softphone:
-    image: nginx:latest
-    container_name: verto-phone
+    image: nginx:stable-alpine
+    container_name: sip-phone
     ports:
-      - 8080:80
+      - 8443:443
     volumes:
-      - ./verto-client/demo:/usr/share/nginx/html
+      - ./ctxSip:/usr/share/nginx/html
+      - ./cert.pem:/root/ssl/cert.pem
+      - ./key.pem:/root/ssl/key.pem
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf 
     restart: always
 
 # $ Softswitch running on Docker
@@ -38,19 +43,19 @@ services:
       - 15061:5061
       - 15080:5080
       - 15081:5081
-      - 7443/tcp
-      - 8021/tcp #fs_cli
-      - 8082 # verto wss
-      - 16384-16394/udp #rtp
+      - 7443:7443
+      - 8082:8082 # verto wss
+      - 16384-16394:16384-16394 #rtp
 #    network_mode: host
-    networks:
-        voicenet:
-          ipv4_address: 172.28.0.5
+#    networks:
+#        voicenet:
+#          ipv4_address: 172.28.0.5
     environment:
       SOUND_RATES: "8000"
       SOUND_TYPES: "en-us-allison"
       EPMD: "false"
       DUMPCAP: "false"
+      HOST_IP: "${HOST_IP:-192.168.0.2}"
     volumes:
       - ./config:/etc/freeswitch
       - ./sounds:/usr/share/freeswitch/sounds
