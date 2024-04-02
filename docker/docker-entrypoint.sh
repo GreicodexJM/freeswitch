@@ -22,7 +22,7 @@ if [ "$1" = 'freeswitch' ]; then
         done
     fi
     
-    exec /usr/bin/freeswitch -u freeswitch -g freeswitch -nonat -nf -c
+    exec /usr/bin/freeswitch -u freeswitch -g freeswitch -nonat -nf -c -nonatmap
 fi
 
 exec "$@"
