@@ -12,7 +12,7 @@
 
        WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING WARNING
   -->
-  <X-PRE-PROCESS cmd="set" data="default_password=1234"/>
+  <X-PRE-PROCESS cmd="set" data="default_password=4321"/>
   <!-- Did you change it yet? -->
   <!--
       The following variables are set dynamically - calculated if possible by freeswitch - and
@@ -58,7 +58,13 @@
       affect the sip authentication.  Please review conf/directory/default.xml for more
       information on this topic.
   -->
-  <X-PRE-PROCESS cmd="set" data="domain=172.17.0.3"/>
+  <X-PRE-PROCESS cmd="env-set" data="env_host_ip=$DOCKER_HOST_IP"/>
+  <X-PRE-PROCESS cmd="env-set" data="env_amqp_user=$RABBITMQ_USER"/>
+  <X-PRE-PROCESS cmd="env-set" data="env_amqp_password=$RABBITMQ_PASSWORD"/>
+  <X-PRE-PROCESS cmd="env-set" data="env_amqp_hostname=$RABBITMQ_SERVER"/>
+  <X-PRE-PROCESS cmd="env-set" data="env_amqp_port=$RABBITMQ_PORT"/>
+  <X-PRE-PROCESS cmd="env-set" data="env_amqp_vhost=$RABBITMQ_VHOST"/>
+  <X-PRE-PROCESS cmd="set" data="domain=$${env_host_ip}"/>
   <X-PRE-PROCESS cmd="set" data="domain_name=$${domain}"/>
   <X-PRE-PROCESS cmd="set" data="hold_music=local_stream://moh"/>
   <X-PRE-PROCESS cmd="set" data="use_profile=external"/>

@@ -1,8 +1,8 @@
 version: "3.5"
-networks:
-  voice:
-    driver: bridge
-    enable_ipv6: false
+#networks:
+#  voice:
+#    driver: bridge
+#    enable_ipv6: false
 #    ipam:
 #      driver: default
 #      config:
@@ -14,18 +14,36 @@ volumes:
   data:
 
 services:
+  amqbus:
+    image: rabbitmq:3-management
+    environment:
+      - RABBITMQ_DEFAULT_USER=${AMQBUS_USER:-guest}
+      - RABBITMQ_DEFAULT_PASS=${AMQBUS_PASSWD:-guest}
+      - RABBITMQ_DEFAULT_VHOST=${AMQBUS_VHOST:-/}
+    expose:
+      - 5672
+    ports:
+      - 15672:15672
   fswitch:
     image: greicodex/freeswitch
     build:
       dockerfile: docker/freeswitch.Dockerfile
-    networks:
-      voice:
+    network_mode: host
+#    networks:
+#      voice:
 #        ipv4_address: 192.168.238.5
 #        gateway: 172.18.238.1
     volumes:
       - data:/data
       - ./config:/config
       - ./tmp:/tmp
+    environment:
+      - DOCKER_HOST_IP=192.168.68.105
+      - RABBITMQ_USER=${AMQBUS_USER:-guest}
+      - RABBITMQ_PASSWORD=${AMQBUS_PASSWD:-guest}
+      - RABBITMQ_SERVER=amqbus
+      - RABBITMQ_PORT=5672
+      - RABBITMQ_VHOST=${AMQBUS_VHOST:-/}
     ports:
       - "18021:8021"
       - "5060:5060"

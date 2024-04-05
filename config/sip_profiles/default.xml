@@ -1,8 +1,8 @@
-<profile name="external-ipv6">
+<profile name="external">
   <!-- http://wiki.freeswitch.org/wiki/Sofia_Configuration_Files -->
   <!-- This profile is only for outbound registrations to providers -->
   <gateways>
-    <X-PRE-PROCESS cmd="include" data="external-ipv6/*.xml"/>
+    <X-PRE-PROCESS cmd="include" data="gateways/*.xml"/>
   </gateways>
 
   <aliases>
@@ -13,7 +13,7 @@
   </aliases>
 
   <domains>
-    <!--<domain name="all" alias="false" parse="true"/>-->
+    <domain name="all" alias="false" parse="true"/>
   </domains>
 
   <settings>
@@ -36,7 +36,7 @@
     <!--<param name="enable-100rel" value="true"/>-->
     <!--<param name="disable-srv503" value="true"/>-->
     <!-- This could be set to "passive" -->
-    <param name="local-network-acl" value="localnet.auto"/>
+    <param name="local-network-acl" value="passive"/>
     <param name="manage-presence" value="false"/>
 
     <!-- used to share presence info across sofia profiles
@@ -60,11 +60,10 @@
     <!--
         DO NOT USE HOSTNAMES, ONLY IP ADDRESSES IN THESE SETTINGS!
     -->
-    <param name="rtp-ip" value="$${local_ip_v6}"/>
-    <param name="sip-ip" value="$${local_ip_v6}"/>
-    <!-- Shouldn't set these on IPv6 -->
-    <!--<param name="ext-rtp-ip" value="auto-nat"/>-->
-    <!--<param name="ext-sip-ip" value="auto-nat"/>-->
+    <param name="rtp-ip" value="$${local_ip_v4}"/>
+    <param name="sip-ip" value="$${local_ip_v4}"/>
+    <param name="ext-rtp-ip" value="$${external_rtp_ip}"/>
+    <param name="ext-sip-ip" value="$${external_sip_ip}"/>
     <param name="rtp-timeout-sec" value="300"/>
     <param name="rtp-hold-timeout-sec" value="1800"/>
     <!--<param name="enable-3pcc" value="true"/>-->
@@ -92,5 +91,7 @@
     <param name="tls-verify-in-subjects" value=""/>
     <!-- TLS version ("sslv23" (default), "tlsv1"). NOTE: Phones may not work with TLSv1 -->
     <param name="tls-version" value="$${sip_tls_version}"/>
+    <!-- TLS ciphers default: ALL:!ADH:!LOW:!EXP:!MD5:@STRENGTH -->
+    <param name="tls-ciphers" value="$${sip_tls_ciphers}"/>
   </settings>
 </profile>
