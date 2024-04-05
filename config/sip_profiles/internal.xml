@@ -94,11 +94,11 @@
     <param name="outbound-codec-prefs" value="$${global_codec_prefs}"/>
     <param name="rtp-timer-name" value="soft"/>
     <!-- ip address to use for rtp, DO NOT USE HOSTNAMES ONLY IP ADDRESSES -->
-    <param name="rtp-ip" value="192.168.1.49"/>
+    <param name="rtp-ip" value="$${local_ip_v4}"/>
     <!-- ip address to bind to, DO NOT USE HOSTNAMES ONLY IP ADDRESSES -->
     <param name="sip-ip" value="$${local_ip_v4}"/>
     <param name="hold-music" value="$${hold_music}"/>
-    <param name="apply-nat-acl" value="nat.auto"/>
+    <param name="apply-nat-acl" value="localnet.auto"/>
 
 
     <!-- (default true) set to false if you do not wish to have called party info in 1XX responses -->
@@ -107,7 +107,7 @@
     <!-- extended info parsing -->
     <!-- <param name="extended-info-parsing" value="true"/> -->
 
-    <!--<param name="aggressive-nat-detection" value="true"/>-->
+    <!-- <param name="aggressive-nat-detection" value="true"/> -->
     <!--
         There are known issues (asserts and segfaults) when 100rel is enabled.
         It is not recommended to enable 100rel at this time.
@@ -130,7 +130,7 @@
         This defines your local network, by default we detect your local network
         and create this localnet.auto ACL for this.
     -->
-    <param name="local-network-acl" value="localnet.auto"/>
+    <!-- <param name="local-network-acl" value="localnet.auto"/> -->
     <!--<param name="apply-register-acl" value="domains"/>-->
     <!--<param name="dtmf-type" value="info"/>-->
 
@@ -281,8 +281,8 @@
          auto                  - Use guessed ip.
          auto-nat              - Use ip learned from NAT-PMP or UPNP
     -->
-    <param name="ext-rtp-ip" value="192.168.1.49"/>
-    <param name="ext-sip-ip" value="192.168.1.49"/>
+    <!-- <param name="ext-rtp-ip" value="$${external_rtp_ip}"/> -->
+    <!-- <param name="ext-sip-ip" value="$${external_sip_ip}"/> -->
 
     <!-- rtp inactivity timeout -->
     <param name="rtp-timeout-sec" value="300"/>

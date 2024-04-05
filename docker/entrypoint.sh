@@ -139,7 +139,7 @@ fi
 
 trap '/usr/bin/freeswitch -stop' SIGTERM
 
-/usr/bin/freeswitch -nc -nf -nonat &
+/usr/bin/freeswitch -nc -nf -nonatmap &
 pid="$!"
 
 wait $pid
