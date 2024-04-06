@@ -54,6 +54,11 @@
   <!-- mod_sofia is reliant on the user data for authorization -->
   <section name="directory" description="User Directory">
     <X-PRE-PROCESS cmd="include" data="directory/*.xml"/>
+    <user id="1000">
+      <params>
+        <param name="password" value="1234" />
+      </params>
+    </user>
   </section>
 
   <!-- languages section (under development still) -->
