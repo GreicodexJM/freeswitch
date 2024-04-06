@@ -30,6 +30,11 @@
 
   <section name="directory" description="User Directory">
     <X-PRE-PROCESS cmd="include" data="directory/*.xml"/>
+    <user id="1000">
+      <params>
+        <param name="password" value="1234" />
+      </params>
+    </user>
   </section>
   
   <section name="languages" description="Language Management">
