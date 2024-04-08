@@ -1,0 +1,32 @@
+diff --git a/src/mod/event_handlers/mod_amqp/mod_amqp.h b/src/mod/event_handlers/mod_amqp/mod_amqp.h
+index f5c63780a4..7632fb5e7a 100644
+--- a/src/mod/event_handlers/mod_amqp/mod_amqp.h
++++ b/src/mod/event_handlers/mod_amqp/mod_amqp.h
+@@ -40,10 +40,10 @@
+ #define MOD_AMQP_H
+ 
+ #include <switch.h>
+-#include <amqp.h>
+-#include <amqp_framing.h>
+-#include <amqp_tcp_socket.h>
+-#include <amqp_ssl_socket.h>
++#include <rabbitmq-c/amqp.h>
++#include <rabbitmq-c/framing.h>
++#include <rabbitmq-c/tcp_socket.h>
++#include <rabbitmq-c/ssl_socket.h>
+ 
+ #ifndef _MSC_VER
+ #include <strings.h>
+diff --git a/src/mod/event_handlers/mod_amqp/mod_amqp_connection.c b/src/mod/event_handlers/mod_amqp/mod_amqp_connection.c
+index 73cf09a354..96808a2c78 100644
+--- a/src/mod/event_handlers/mod_amqp/mod_amqp_connection.c
++++ b/src/mod/event_handlers/mod_amqp/mod_amqp_connection.c
+@@ -117,7 +117,7 @@ switch_status_t mod_amqp_connection_open(mod_amqp_connection_t *connections, mod
+ 
+ 	while (connection_attempt && amqp_status){
+ 		if (connection_attempt->ssl_on == 1) {
+-			amqp_set_initialize_ssl_library(connection_attempt->ssl_on);
++			// amqp_set_initialize_ssl_library(connection_attempt->ssl_on);
+ 			if (!(socket = amqp_ssl_socket_new(newConnection))) {
+ 				switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_CRIT, "Could not create SSL socket\n");
+ 				goto err;

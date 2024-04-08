@@ -1,5 +1,30 @@
+diff --git a/src/mod/applications/mod_av/avcodec.c b/src/mod/applications/mod_av/avcodec.c
+index 16d268273b..befd893760 100644
+--- a/src/mod/applications/mod_av/avcodec.c
++++ b/src/mod/applications/mod_av/avcodec.c
+@@ -1557,7 +1557,7 @@ static switch_status_t switch_h264_encode(switch_codec_t *codec, switch_frame_t
+ 		}
+ 
+ 		 avframe->pict_type = AV_PICTURE_TYPE_I;
+-		 avframe->key_frame = 1;
++		 // avframe->key_frame = 1;
+ 		 context->last_keyframe_request = switch_time_now();
+ 	}
+ 
+@@ -1601,9 +1601,9 @@ GCC_DIAG_ON(deprecated-declarations)
+ 		}
+ #endif
+ 
+-	if (context->need_key_frame && avframe->key_frame == 1) {
++	if (context->need_key_frame && AV_FRAME_FLAG_KEY) {
+ 		avframe->pict_type = 0;
+-		avframe->key_frame = 0;
++		// avframe->key_frame = 0;
+ 		context->need_key_frame = 0;
+ 	}
+ 
 diff --git a/src/mod/applications/mod_av/avformat.c b/src/mod/applications/mod_av/avformat.c
-index 69475c169f..0a1662aed6 100644
+index 69475c169f..2750c97d51 100644
 --- a/src/mod/applications/mod_av/avformat.c
 +++ b/src/mod/applications/mod_av/avformat.c
 @@ -455,6 +455,7 @@ static int mod_avformat_alloc_output_context2(AVFormatContext **avctx, const cha
@@ -18,6 +43,39 @@ index 69475c169f..0a1662aed6 100644
  
  	if (filename) {
  #if (LIBAVCODEC_VERSION_INT < AV_VERSION_INT(58,7,100))
+@@ -621,7 +623,7 @@ static switch_status_t add_stream(av_file_context_t *context, MediaStream *mst,
+ 		c->rc_initial_buffer_occupancy = buffer_bytes * 8;
+ 
+ 		if (codec_id == AV_CODEC_ID_H264) {
+-			c->ticks_per_frame = 2;
++			// c->framerate = 2.;
+ 
+ 
+ 			c->flags|=AV_CODEC_FLAG_LOOP_FILTER;   // flags=+loop
+@@ -3094,6 +3096,7 @@ static switch_status_t av_file_read_video(switch_file_handle_t *handle, switch_f
+ 	int smaller_ts = context->read_fps;
+ 	AVCodecContext *c = NULL;
+ 	AVCodecParserContext *cp = NULL;
++	if(cp != NULL) return SWITCH_STATUS_BREAK;
+ 
+ 	if (!context->has_video) return SWITCH_STATUS_FALSE;
+ 
+@@ -3203,13 +3206,13 @@ static switch_status_t av_file_read_video(switch_file_handle_t *handle, switch_f
+ 
+ 	if ((c = av_get_codec_context(mst)) && c->time_base.num) {
+ 		cp = av_stream_get_parser(st);
+-		ticks = cp ? cp->repeat_pict + 1 : c->ticks_per_frame;
++		// ticks = cp ? cp->repeat_pict + 1 : ((int)c->framerate);
+ 		// mst->next_pts += ((int64_t)AV_TIME_BASE * st->codec->time_base.num * ticks) / st->codec->time_base.den;
+ 	}
+ 
+ 	if (!context->video_start_time) {
+ 		switch_log_printf(SWITCH_CHANNEL_LOG, SWITCH_LOG_DEBUG1, "start: %" SWITCH_INT64_T_FMT " ticks: %d ticks_per_frame: %d st num:%d st den:%d codec num:%d codec den:%d start: %" SWITCH_TIME_T_FMT ", duration:%" SWITCH_INT64_T_FMT " nb_frames:%" SWITCH_INT64_T_FMT " q2d:%f\n",
+-			context->video_start_time, ticks, c ? c->ticks_per_frame : -1, st->time_base.num, st->time_base.den, c ? c->time_base.num : -1, c ? c->time_base.den : -1,
++			context->video_start_time, ticks, -1, st->time_base.num, st->time_base.den, c ? c->time_base.num : -1, c ? c->time_base.den : -1,
+ 			st->start_time, st->duration == AV_NOPTS_VALUE ? context->fc->duration / AV_TIME_BASE * 1000 : st->duration, st->nb_frames, av_q2d(st->time_base));
+ 	}
+ 
 diff --git a/src/mod/applications/mod_av/mod_av.h b/src/mod/applications/mod_av/mod_av.h
 index a89e6cb8f7..ef9bd48d73 100644
 --- a/src/mod/applications/mod_av/mod_av.h
