@@ -1,17 +1,23 @@
 FROM alpine:latest
 # explicitly set user/group IDs
+#RUN apk add bash git build-base automake autoconf libtool diffutils yasm
+#RUN apk add spandsp3-dev sofia-sip-dev libjpeg-turbo-dev sqlite-dev pcre-dev curl-dev \
+#    speex-dev speexdsp-dev ldns-dev libks-dev rabbitmq-c-dev tiff-dev ffmpeg-libavformat \
+#    ffmpeg-dev lua5.4-dev opus-dev libopusenc-dev opusfile-dev libsndfile-dev
 RUN echo "**** Installing Packages *****" \
-    && apk add --no-cache freeswitch freeswitch-sample-config freeswitch-sounds-en-us-callie-8000 freeswitch-timezones freeswitch-sounds-music-8000 lua sqlite lua-sqlite tiff-tools util-linux s6 openssl
+    && apk add --no-cache lua sqlite lua-sqlite tiff-tools util-linux s6 openssl
+#RUN sed -e 's|applications/mod_signalwire|#applications/mod_signalwire|g' -i modules.conf
+RUN apk add freeswitch freeswitch-sample-config freeswitch-sounds-en-us-callie-8000 freeswitch-timezones freeswitch-sounds-music-8000    
 RUN echo "**** Linking Config ****" \
     && mkdir -p /usr/share/freeswitch/conf/ \
     && mv /etc/freeswitch /usr/share/freeswitch/conf/vanilla \
     && ln -s /config /etc/freeswitch \        
     && mv /usr/share/freeswitch/sounds /usr/share/freeswitch/conf/sounds \
     && ln -s /sounds /usr/share/freeswitch/sounds
-
+RUN apk add rabbitmq-c --no-cache
 #   && mv /usr/lib/freeswitch/db /usr/share/freeswitch/conf/data \
 #   && ln -s /data /usr/lib/freeswitch/db \
-
+COPY ./mod_amqp.so /usr/lib/freeswitch/mod/mod_amqp.so
 # Volumes
 ## Freeswitch Configuration
 VOLUME ["/config", "/data", "/sounds", "/web"]

@@ -1,14 +1,15 @@
 version: "3.5"
-#networks:
-#  voice:
-#    driver: bridge
-#    enable_ipv6: false
-#    ipam:
-#      driver: default
-#      config:
-#        - subnet: "192.168.238.0/24"
-#        - subnet: "2001:3984:3989::/64"
-    
+networks:
+  voice:
+    driver: bridge
+    enable_ipv6: false    
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.50.0.0/24
+          gateway: 10.50.0.1
+  control:
+#    driver: default
     
 volumes:
   data:
@@ -20,25 +21,28 @@ services:
       - RABBITMQ_DEFAULT_USER=${AMQBUS_USER:-guest}
       - RABBITMQ_DEFAULT_PASS=${AMQBUS_PASSWD:-guest}
       - RABBITMQ_DEFAULT_VHOST=${AMQBUS_VHOST:-/}
+    networks:
+      - control
     expose:
       - 5672
+      - 15672
     ports:
       - 15672:15672
   fswitch:
     image: greicodex/freeswitch
     build:
       dockerfile: docker/freeswitch.Dockerfile
-    network_mode: host
-#    networks:
-#      voice:
-#        ipv4_address: 192.168.238.5
-#        gateway: 172.18.238.1
+#    network_mode: host
+    networks:
+      voice:
+        ipv4_address: 10.50.0.2
+      control:
     volumes:
       - data:/data
       - ./config:/config
       - ./tmp:/tmp
     environment:
-      - DOCKER_HOST_IP=192.168.68.105
+      - DOCKER_HOST_IP=10.50.0.2
       - RABBITMQ_USER=${AMQBUS_USER:-guest}
       - RABBITMQ_PASSWORD=${AMQBUS_PASSWD:-guest}
       - RABBITMQ_SERVER=amqbus
@@ -46,8 +50,8 @@ services:
       - RABBITMQ_VHOST=${AMQBUS_VHOST:-/}
     ports:
       - "18021:8021"
-      - "5060:5060"
-      - "5080:5080"
+      - "5060:5060/udp"
+      - "5080:5080/udp"
       - "5061:5061"
       - "5081:5081"
       - "7443:7443"
