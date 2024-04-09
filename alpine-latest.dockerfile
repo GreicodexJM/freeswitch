@@ -6,7 +6,7 @@ RUN apk update && apk add git --no-cache
 RUN git clone https://github.com/signalwire/freeswitch --depth 1 --branch=master /usr/src/freeswitch
 RUN git clone https://github.com/signalwire/libks  --depth 1 --branch=master /usr/src/libs/libks
 RUN git clone https://github.com/freeswitch/sofia-sip  --depth 1 --branch=master /usr/src/libs/sofia-sip 
-RUN git clone https://github.com/freeswitch/spandsp  --depth 1 --branch=0d2e6ac /usr/src/libs/spandsp
+RUN git clone https://github.com/freeswitch/spandsp  --depth 1 --branch=master /usr/src/libs/spandsp
 RUN git clone https://github.com/signalwire/signalwire-c  --depth 1 --branch=master /usr/src/libs/signalwire-c
 
 RUN apk add --no-cache \
@@ -66,11 +66,12 @@ RUN cd /usr/src/freeswitch && ./configure
 COPY ./docker/patches/*.diff /usr/src/freeswitch_patches/
 RUN cd /usr/src/freeswitch && patch -p1 < /usr/src/freeswitch_patches/issue_2202.diff 
 RUN cd /usr/src/freeswitch && patch -p1 < /usr/src/freeswitch_patches/issue_2219.diff 
+RUN cd /usr/src/freeswitch && patch -p1 < /usr/src/freeswitch_patches/issue_2158.diff 
 
 RUN cd /usr/src/freeswitch && make -j`nproc` && make install
 
 # Cleanup the image
-RUN apk cache purge
+#RUN apk cache purge
 
 # Uncomment to cleanup even more
-RUN rm -rf /usr/src/*
+#RUN rm -rf /usr/src/*
