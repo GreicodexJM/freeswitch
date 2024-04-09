@@ -8,7 +8,7 @@
 					<param name="username" value="$${env_amqp_user}"/>
 					<param name="password" value="$${env_amqp_password}"/>
 					<param name="port" value="$${env_amqp_port}"/>
-					<param name="heartbeat" value="15"/>
+					<param name="heartbeat" value="10"/>
 				</connection>
 			</connections>
 			<params>
@@ -42,7 +42,7 @@
 					<param name="username" value="$${env_amqp_user}"/>
 					<param name="password" value="$${env_amqp_password}"/>
 					<param name="port" value="$${env_amqp_port}"/>
-					<param name="heartbeat" value="15"/>
+					<param name="heartbeat" value="10"/>
 				</connection>
 			</connections>
 			<params>
@@ -65,7 +65,7 @@
 					<param name="username" value="$${env_amqp_user}"/>
 					<param name="password" value="$${env_amqp_password}"/>
 					<param name="port" value="$${env_amqp_port}"/>
-					<param name="heartbeat" value="15"/>
+					<param name="heartbeat" value="10"/>
 				</connection>
 			</connections>
 			<params>
