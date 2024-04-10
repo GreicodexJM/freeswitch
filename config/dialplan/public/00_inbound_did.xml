@@ -12,7 +12,7 @@
       -->
       <action application="set" data="domain_name=$${domain}"/>
       <!-- This example maps the DID 5551212 to ring 1000 in the default context -->
-      <action application="transfer" data="1000 XML default"/>
+      <action application="transfer" data="74992 XML default"/>
     </condition>
   </extension>
 </include>
