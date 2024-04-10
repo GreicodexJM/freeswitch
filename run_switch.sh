@@ -5,11 +5,22 @@ if [ -z $fs_image ]; then
 fi
 
 CONTROL_PORT=8021
+<<<<<<< HEAD
 SIP_INTERNAL=15060
 SIP_INT_TLS=15061
 SIP_EXTERNAL=15080
 SIP_EXT_TLS=15081
 SIP_WSS=7443
+=======
+SIP_INTERNAL=5060
+SIP_INT_TLS=5061
+SIP_EXTERNAL=5080
+SIP_EXT_TLS=5081
+SIP_WS=5066
+SIP_WSS=7443
+VERTO_WS=8081
+VERTO_WSS=8082
+>>>>>>> e6f51ca (Initial commit)
 docker run --rm -it \
     -v ./config:/etc/freeswitch \
     -v ./sounds:/usr/share/freeswitch/sounds \
@@ -23,5 +34,10 @@ docker run --rm -it \
     -p $SIP_WSS:7443  \
     -p $VERTO_WS:8081  \
     -p $VERTO_WSS:8082  \
+<<<<<<< HEAD
     -p 16384-16394:16384-16394/udp \
      --name FS0 greicodex/freeswitch  
+=======
+    -p 16384-16768:16384-16768/udp \
+     --name fsw1 greicodex/freeswitch  
+>>>>>>> e6f51ca (Initial commit)
