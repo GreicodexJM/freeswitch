@@ -26,8 +26,12 @@
        If unspecified, the bind_server_ip value is used.
        Used by: sofia.conf.xml dingaling.conf.xml
   -->
+<<<<<<< HEAD
   <!-- <X-PRE-PROCESS cmd="stun-set" data="external_rtp_ip=stun:stun.freeswitch.org"/> -->
   <!-- <X-PRE-PROCESS cmd="set" data="external_rtp_ip=$${local_ip_v4}"/> -->
+=======
+  <X-PRE-PROCESS cmd="stun-set" data="external_rtp_ip=192.168.1.49"/> <!-- stun:stun.l.google.com"/> -->
+>>>>>>> f10de1e (Working Signaling, WIP rtcp)
 
   <!-- external_sip_ip
       Used as the public IP address for SDP.
@@ -40,8 +44,12 @@
        If unspecified, the bind_server_ip value is used.
        Used by: sofia.conf.xml dingaling.conf.xml
   -->
+<<<<<<< HEAD
   <!-- <X-PRE-PROCESS cmd="stun-set" data="external_sip_ip=stun:stun.freeswitch.org"/> -->
   <!-- <X-PRE-PROCESS cmd="set" data="external_sip_ip=$${local_ip_v4}"/> -->
+=======
+  <X-PRE-PROCESS cmd="stun-set" data="external_sip_ip=192.168.1.49"/> <!-- stun:stun.l.google.com"/> -->
+>>>>>>> f10de1e (Working Signaling, WIP rtcp)
 
   <!-- unroll-loops
        Used to turn on sip loopback unrolling.
