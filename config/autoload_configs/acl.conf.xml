@@ -11,6 +11,7 @@
 
 
     <list name="domains" default="deny">
+      <node type="allow" cidr="$${env_host_ip}/24"/>
     </list>
 
   </network-lists>
