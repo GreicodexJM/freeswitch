@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 version: "3.4"
 
 networks:
@@ -61,3 +62,35 @@ services:
       - ./config:/etc/freeswitch
       - ./sounds:/usr/share/freeswitch/sounds
       - ./tmp:/tmp
+=======
+version: "3.5"
+networks:
+  voice:
+    driver: bridge
+    enable_ipv6: false
+    
+volumes:
+  data:
+
+services:
+  fswitch:
+    image: greicodex/freeswitch
+    build:
+      dockerfile: docker/freeswitch.Dockerfile
+    network_mode: host      
+    volumes:
+      - data:/data
+      - ./config:/config
+      - ./tmp:/tmp
+    ports:
+      - 8021
+      - 5060
+      - 5080
+      - 5061
+      - 5081
+      - 7443
+      - 5070
+      - 64535-64545/udp
+      - 16384-16394/udp
+      
+>>>>>>> 9c7cc0a (Linphone works)
