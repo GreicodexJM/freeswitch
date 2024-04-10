@@ -29,9 +29,9 @@
 
     <groups>
       <group name="default">
-	<users>
-	  <X-PRE-PROCESS cmd="include" data="default/*.xml"/>
-	</users>
+        <users>
+          <X-PRE-PROCESS cmd="include" data="default/*.xml"/>
+        </users>
       </group>
     </groups>
 

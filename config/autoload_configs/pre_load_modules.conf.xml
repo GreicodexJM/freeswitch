@@ -2,6 +2,6 @@
   <modules>
     <!-- Databases -->
     <!-- <load module="mod_mariadb"/> -->
-    <load module="mod_pgsql"/>
+    <!-- <load module="mod_pgsql"/> -->
   </modules>
 </configuration>

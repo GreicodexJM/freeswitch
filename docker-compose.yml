@@ -42,7 +42,7 @@ services:
       - ./config:/config
       - ./tmp:/tmp
     environment:
-      - DOCKER_HOST_IP=10.50.0.2
+      - VOICE_IP=10.50.0.2
       - RABBITMQ_USER=${AMQBUS_USER:-guest}
       - RABBITMQ_PASSWORD=${AMQBUS_PASSWD:-guest}
       - RABBITMQ_SERVER=amqbus
