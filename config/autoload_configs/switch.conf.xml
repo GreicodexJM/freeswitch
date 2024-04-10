@@ -13,13 +13,13 @@
     <key name="10" value="sofia profile internal siptrace on"/>
     <key name="11" value="sofia profile internal siptrace off"/>
     <key name="12" value="version"/>
-  </cli-keybindings> 
-  
+  </cli-keybindings>
+
   <default-ptimes>
     <!-- Set this to override the 20ms assumption of various codecs in the sdp with no ptime defined -->
     <!-- <codec name="G729" ptime="40"/> -->
   </default-ptimes>
-  
+
   <settings>
     <!-- Colorize the Console -->
     <param name="colorize-console" value="true"/>
@@ -114,7 +114,7 @@
 	account default : provider
 	###################################
 	
-    -->    
+    -->
 
     <param name="mailer-app" value="sendmail"/>
     <param name="mailer-app-args" value="-t"/>
