@@ -32,7 +32,7 @@
     <X-PRE-PROCESS cmd="include" data="directory/*.xml"/>
     <user id="1000">
       <params>
-        <param name="password" value="1234" />
+        <param name="password" value="$${default_password}" />
       </params>
     </user>
   </section>
