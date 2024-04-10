@@ -272,13 +272,8 @@
          auto                  - Use guessed ip.
          auto-nat              - Use ip learned from NAT-PMP or UPNP
     -->
-<<<<<<< HEAD
     <param name="ext-rtp-ip" value="auto-nat"/>
     <param name="ext-sip-ip" value="auto-nat"/>
-=======
-    <param name="ext-rtp-ip" value="192.168.1.49"/>
-    <param name="ext-sip-ip" value="192.168.1.49"/>
->>>>>>> f10de1e (Working Signaling, WIP rtcp)
 
     <!-- rtp inactivity timeout -->
     <param name="rtp-timeout-sec" value="300"/>
