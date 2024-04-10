@@ -63,8 +63,11 @@ services:
   softphone:
     image: nginx:stable-alpine
     container_name: sip-phone
-    ports:
-      - 8443:443
+    expose:
+      - 443
+    networks:
+      voice:
+      ipv4_address: 10.50.0.3
     volumes:
       - ./ctxSip:/usr/share/nginx/html
       - ./cert.pem:/root/ssl/cert.pem
