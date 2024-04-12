@@ -60,7 +60,14 @@ services:
       - "7443:7443"
       - "5070:5070"
       - "16384-16394:16384-16394/udp"
-      
+
+# $ TTS Server
+  kaldi_stt:
+    image: alphacep/kaldi-es
+    networks:
+      control:
+    expose:
+      - 2700
 
 # $ Softphone running on the Browser
   softphone:
