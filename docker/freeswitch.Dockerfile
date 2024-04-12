@@ -1,23 +1,41 @@
+FROM greicodex/freeswitch:alpine-latest-build as build
 FROM alpine:latest
+LABEL MAINTAINER="Javier Munoz <javier@greicodex.com>"
 # explicitly set user/group IDs
-#RUN apk add bash git build-base automake autoconf libtool diffutils yasm
-#RUN apk add spandsp3-dev sofia-sip-dev libjpeg-turbo-dev sqlite-dev pcre-dev curl-dev \
-#    speex-dev speexdsp-dev ldns-dev libks-dev rabbitmq-c-dev tiff-dev ffmpeg-libavformat \
-#    ffmpeg-dev lua5.4-dev opus-dev libopusenc-dev opusfile-dev libsndfile-dev
+
 RUN echo "**** Installing Packages *****" \
-    && apk add --no-cache lua sqlite lua-sqlite tiff-tools util-linux s6 openssl
-#RUN sed -e 's|applications/mod_signalwire|#applications/mod_signalwire|g' -i modules.conf
-RUN apk add freeswitch freeswitch-sample-config freeswitch-sounds-en-us-callie-8000 freeswitch-timezones freeswitch-sounds-music-8000    
-RUN echo "**** Linking Config ****" \
-    && mkdir -p /usr/share/freeswitch/conf/ \
-    && mv /etc/freeswitch /usr/share/freeswitch/conf/vanilla \
-    && ln -s /config /etc/freeswitch \        
-    && mv /usr/share/freeswitch/sounds /usr/share/freeswitch/conf/sounds \
-    && ln -s /sounds /usr/share/freeswitch/sounds
-RUN apk add rabbitmq-c --no-cache
+    && apk add --no-cache lua sqlite lua-sqlite tiff-tools util-linux s6 \
+    openssl rabbitmq-c curl speex speexdsp ffmpeg ldns libogg sqlite pcre \
+    zlib libdbi unixodbc ncurses expat gdbm erlang libpq opus lua5.2 python3 \
+    libsndfile flac libvorbis libshout mpg123 lame libedit libwebsockets
+RUN addgroup freeswitch
+RUN adduser -g "<freeswitch>" -S -D -H -G freeswitch freeswitch 
+COPY --from=build --chown=freeswitch:freeswitch /usr/local/freeswitch /usr/local/freeswitch
+COPY --from=build --chown=freeswitch:freeswitch /usr/src/freeswitch/conf /usr/share/freeswitch/conf
+COPY --from=build /usr/lib/libspandsp.* /usr/lib/
+COPY --from=build /usr/lib/libsofia-sip-ua.* /usr/lib/
+RUN ln -s /usr/local/freeswitch/bin/freeswitch /usr/bin/freeswitch
+RUN ln -s /usr/local/freeswitch/bin/fs_cli /usr/bin/fs_cli
+RUN ln -s /usr/local/freeswitch/bin/fs_encode /usr/bin/fs_encode
+RUN ln -s /usr/local/freeswitch/bin/fs_ivrd /usr/bin/fs_ivrd
+RUN ln -s /usr/local/freeswitch/bin/fs_tts /usr/bin/fs_tts
+RUN ln -s /usr/local/freeswitch/bin/tone2wav /usr/bin/tone2wav
+RUN echo "**** Linking Config ****" \    
+    && mkdir -p /config \
+    && mkdir -p /sounds \
+    && mkdir -p /data \
+    && mkdir -p /web \
+    && mkdir -p /var/run/freeswitch \
+    && mkdir -p /var/lib/freeswitch \
+    && chown freeswitch:freeswitch /var/run/freeswitch /var/lib/freeswitch \
+    && ln -s /config /etc/freeswitch \            
+    && ln -s /sounds /usr/share/freeswitch/sounds \
+    && ln -s /data /usr/share/freeswitch/db \
+    && ln -s /web /usr/share/freeswitch/web
+    
 #   && mv /usr/lib/freeswitch/db /usr/share/freeswitch/conf/data \
 #   && ln -s /data /usr/lib/freeswitch/db \
-COPY ./mod_amqp.so /usr/lib/freeswitch/mod/mod_amqp.so
+USER freeswitch
 # Volumes
 ## Freeswitch Configuration
 VOLUME ["/config", "/data", "/sounds", "/web"]

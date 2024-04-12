@@ -36,7 +36,6 @@ services:
     image: greicodex/freeswitch
     build:
       dockerfile: docker/freeswitch.Dockerfile
-#    network_mode: host
     networks:      
       control:
       voice:

@@ -1,0 +1,21 @@
+diff --git a/configure.ac b/configure.ac
+index 348103f..1238982 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -1588,6 +1588,10 @@ PKG_CHECK_MODULES([HIREDIS], [hiredis >= 0.10.0],[
+   AM_CONDITIONAL([HAVE_HIREDIS],[true])],[
+   AC_MSG_RESULT([no]); AM_CONDITIONAL([HAVE_HIREDIS],[false])])
+ 
++PKG_CHECK_MODULES([WEBSOCKETS], [libwebsockets >= 0.0.1],[ 
++  AM_CONDITIONAL([HAVE_WEBSOCKETS],[true])],[
++  AC_MSG_RESULT([no]); AM_CONDITIONAL([HAVE_WEBSOCKETS],[false])])
++
+ AC_ARG_ENABLE(core-libedit-support,     
+   [AS_HELP_STRING([--disable-core-libedit-support], [Compile without libedit Support])])
+ 
+@@ -2386,3 +2390,5 @@ echo "      storagedir:      ${storagedir}"
+ echo "      cachedir:        ${cachedir}"
+ echo ""
+ echo "------------------------------------------------------------------------------"
++
++
