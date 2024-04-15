@@ -27,6 +27,7 @@
     <!-- <load module="mod_zeroconf"/> -->
     <!-- <load module="mod_erlang_event"/> -->
     <!-- <load module="mod_snmp"/> -->
+    <load module="mod_amqp" />
 
     <!-- Directory Interfaces -->
     <!-- <load module="mod_ldap"/> -->

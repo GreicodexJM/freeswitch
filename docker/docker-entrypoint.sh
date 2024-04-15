@@ -7,12 +7,12 @@ set -e
 
 if [ "$1" = 'freeswitch' ]; then
 
-    if [ ! -f "/etc/freeswitch/freeswitch.xml" ]; then
-        mkdir -p /etc/freeswitch
-        cp -varf /usr/share/freeswitch/conf/minimal/* /etc/freeswitch/
+    if [ ! -f "/usr/local/freeswitch/conf/freeswitch.xml" ]; then
+        mkdir -p /usr/local/freeswitch/conf
+        cp -varf /usr/share/freeswitch/conf/minimal/* /usr/local/freeswitch/conf/
     fi
 
-    chown -R freeswitch:freeswitch /etc/freeswitch
+    chown -R freeswitch:freeswitch /usr/local/freeswitch/conf
     chown -R freeswitch:freeswitch /var/run/freeswitch
     chown -R freeswitch:freeswitch /var/lib/freeswitch
     

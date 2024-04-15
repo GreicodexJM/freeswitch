@@ -22,17 +22,18 @@ RUN ln -s /usr/local/freeswitch/bin/fs_ivrd /usr/bin/fs_ivrd
 RUN ln -s /usr/local/freeswitch/bin/fs_tts /usr/bin/fs_tts
 RUN ln -s /usr/local/freeswitch/bin/tone2wav /usr/bin/tone2wav
 RUN echo "**** Linking Config ****" \    
-    && mkdir -p /etc/freeswitch \
+    && mkdir -p /usr/share/freeswitch/conf/original \
+    && mv  /usr/local/freeswitch/conf/*  /usr/share/freeswitch/conf/original/ \
     && mkdir -p /usr/share/freeswitch/sounds  \
     && mkdir -p /usr/share/freeswitch/db \
     && mkdir -p /usr/share/freeswitch/web \
     && mkdir -p /var/run/freeswitch \
     && mkdir -p /var/lib/freeswitch \    
-    && ln -s /etc/freeswitch /config \            
+    && ln -s /usr/local/freeswitch/conf /config \            
     && ln -s /usr/share/freeswitch/sounds /sounds \
     && ln -s /usr/share/freeswitch/db /data \
     && ln -s /usr/share/freeswitch/web /web \
-    && chown -R freeswitch:freeswitch /var/run/freeswitch /var/lib/freeswitch /etc/freeswitch /usr/share/freeswitch
+    && chown -R freeswitch:freeswitch /var/run/freeswitch /var/lib/freeswitch /usr/local/freeswitch/conf /usr/share/freeswitch
     
 #   && mv /usr/lib/freeswitch/db /usr/share/freeswitch/conf/data \
 #   && ln -s /data /usr/lib/freeswitch/db \

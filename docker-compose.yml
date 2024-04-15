@@ -2,10 +2,11 @@ version: "3.5"
 networks:
   voice:
     driver: bridge
-    enable_ipv6: false    
+    enable_ipv6: true    
     ipam:
       driver: default
       config:
+        - subnet: 2001:0DB8::/112
         - subnet: 10.50.0.0/24
           gateway: 10.50.0.1
   control:
