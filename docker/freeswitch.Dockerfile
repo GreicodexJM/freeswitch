@@ -14,6 +14,7 @@ COPY --from=build --chown=freeswitch:freeswitch /usr/local/freeswitch /usr/local
 COPY --from=build --chown=freeswitch:freeswitch /usr/src/freeswitch/conf /usr/share/freeswitch/conf
 COPY --from=build /usr/lib/libspandsp.* /usr/lib/
 COPY --from=build /usr/lib/libsofia-sip-ua.* /usr/lib/
+COPY --from=build /usr/lib/libks* /usr/lib/
 RUN ln -s /usr/local/freeswitch/bin/freeswitch /usr/bin/freeswitch
 RUN ln -s /usr/local/freeswitch/bin/fs_cli /usr/bin/fs_cli
 RUN ln -s /usr/local/freeswitch/bin/fs_encode /usr/bin/fs_encode
