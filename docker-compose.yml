@@ -61,14 +61,33 @@ services:
       - "7443:7443"
       - "5070:5070"
       - "16384-16394:16384-16394/udp"
+    restart: always
 
-# $ TTS Server
+# $ ASR Server
   kaldi_stt:
-    image: alphacep/kaldi-es
+#    image: alphacep/kaldi-es
+    image: greicodex/whisper-stt
+    build:
+      context: asr_server
+      dockerfile: Dockerfile
     networks:
       control:
     expose:
       - 2700
+
+# $ TTS Server
+  google_tts:
+    image: greicodex/google-tts
+    build:
+      context: tts_server
+      dockerfile: Dockerfile      
+    networks:
+      control:
+    expose:
+      - 2600
+    environment:
+      - TTS_LANG=en
+      - PYTHONUNBUFFERED=0
 
 # $ Softphone running on the Browser
   softphone:

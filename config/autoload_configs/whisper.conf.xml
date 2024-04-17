@@ -1,7 +1,7 @@
 <configuration name="whisper.conf" description="Whisper ASR-TTS Configuration">
   <settings>
     <param name="asr-server-url" value="ws://kaldi_stt:2700"/>
-    <param name="tts-server-url" value="ws://10.50.0.1:2600"/>
-    <param name="return-json" value="1"/>
+    <param name="tts-server-url" value="ws://google_tts:2600"/>
+    <param name="return-json" value="0"/>
   </settings>
 </configuration>
