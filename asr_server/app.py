@@ -18,6 +18,7 @@ def process_chunk(rec, message):
     elif type(message) is str and 'eof' in message:
         return rec.FinalResult(), True
     elif rec.AcceptWaveform(message):
+        print('Got audio chunk')
         return rec.Result(), False
     else:
         return rec.PartialResult(), False
@@ -36,48 +37,51 @@ async def recognize(websocket, path):
     max_alternatives = args.max_alternatives
 
     logging.info('Connection from %s', websocket.remote_address);
-
+    prompt_grammar = None
     while True:
+        try:
+            message = await websocket.recv()
+            if type(message) == str:
+                print('text request', message)
+                if 'grammar' in message:
+                    grammar = json.loads(message)
+                    prompt_grammar = grammar['grammar']
+                    print(f"Using grammar: {prompt_grammar}")
+            # Load configuration if provided
+            if isinstance(message, str) and 'config' in message:
+                jobj = json.loads(message)['config']
+                logging.info("Config %s", jobj)
+                if 'phrase_list' in jobj:
+                    phrase_list = jobj['phrase_list']
+                if 'sample_rate' in jobj:
+                    sample_rate = float(jobj['sample_rate'])
+                if 'model' in jobj:
+                    model = Model(jobj['model'])
+                    model_changed = True
+                if 'words' in jobj:
+                    show_words = bool(jobj['words'])
+                if 'max_alternatives' in jobj:
+                    max_alternatives = int(jobj['max_alternatives'])
+                continue
 
-        message = await websocket.recv()
-        if type(response) == str:
-            print('text response', response)
-            if 'grammar' in response:
-                grammar = json.loads(response)
-                prompt_grammar = grammar['grammar']
-        # Load configuration if provided
-        if isinstance(message, str) and 'config' in message:
-            jobj = json.loads(message)['config']
-            logging.info("Config %s", jobj)
-            if 'phrase_list' in jobj:
-                phrase_list = jobj['phrase_list']
-            if 'sample_rate' in jobj:
-                sample_rate = float(jobj['sample_rate'])
-            if 'model' in jobj:
-                model = Model(jobj['model'])
-                model_changed = True
-            if 'words' in jobj:
-                show_words = bool(jobj['words'])
-            if 'max_alternatives' in jobj:
-                max_alternatives = int(jobj['max_alternatives'])
-            continue
+            # Create the recognizer, word list is temporary disabled since not every model supports it
+            if not rec or model_changed:
+                model_changed = False
+                if phrase_list:
+                    rec = KaldiRecognizer(model, sample_rate, json.dumps(phrase_list, ensure_ascii=False))
+                else:
+                    rec = KaldiRecognizer(model, sample_rate)
+                rec.SetWords(show_words)
+                rec.SetMaxAlternatives(max_alternatives)
+                if spk_model:
+                    rec.SetSpkModel(spk_model)
 
-        # Create the recognizer, word list is temporary disabled since not every model supports it
-        if not rec or model_changed:
-            model_changed = False
-            if phrase_list:
-                rec = KaldiRecognizer(model, sample_rate, json.dumps(phrase_list, ensure_ascii=False))
-            else:
-                rec = KaldiRecognizer(model, sample_rate)
-            rec.SetWords(show_words)
-            rec.SetMaxAlternatives(max_alternatives)
-            if spk_model:
-                rec.SetSpkModel(spk_model)
-
-        response, stop = await loop.run_in_executor(pool, process_chunk, rec, message)
-        await websocket.send(response)
-        if stop: break
-
+            response, stop = await loop.run_in_executor(pool, process_chunk, rec, message)
+            await websocket.send(response)
+            if stop: break
+        except Exception as e:
+            print(f"Error during speech-to-text conversion: {e}")
+            await websocket.send("Error converting speech to text")
 
 
 async def start():

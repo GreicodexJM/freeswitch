@@ -10,14 +10,16 @@ BINARY_DOCKERFILE=docker/freeswitch.Dockerfile
 all: binary-image
 
 # Target for building the base image
-base-image: $(BASE_DOCKERFILE)
+base-image: $(BASE_DOCKERFILE) $(BASE_DOCKERFILE_HASH)
 	@if [ -z "$$(docker images -q $(BASE_IMAGE_NAME))" ]; then \
 		echo "Base image not found. Building base image..."; \
-		docker build -t $(BASE_IMAGE_NAME) -f $(BASE_DOCKERFILE) .; \
+		
 	else \
 		echo "Base image already exists."; \
 	fi
-
+build-base-image: $(BASE_DOCKERFILE_HASH)
+	docker build -t $(BASE_IMAGE_NAME) -f $(BASE_DOCKERFILE) .; \
+	
 # Target for building the binary image, depends on the base image
 binary-image: base-image $(BINARY_DOCKERFILE)
 	docker build -t $(BINARY_IMAGE_NAME) -f $(BINARY_DOCKERFILE) .
