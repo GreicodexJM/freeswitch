@@ -45,6 +45,7 @@ services:
       - data:/data
       - ./config:/config
       - ./tmp:/tmp
+      - ./sounds:/usr/local/freeswitch/sounds
     environment:
       - VOICE_IP=10.50.0.2
       - RABBITMQ_USER=${AMQBUS_USER:-guest}

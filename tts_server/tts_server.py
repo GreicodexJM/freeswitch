@@ -8,23 +8,24 @@ from functools import partial
 import base64
 import io
 from pydub import AudioSegment
+import logging
 
 async def speak(websocket, path, language):
     async for message in websocket:
         content_type = websocket.request_headers.get('Content-Type', 'text/plain')
         accept_format = websocket.request_headers.get('Accept', 'audio/sln16')
         
-        print(f"Received message: {message}")
-        print(f"Headers Received - Content-Type: {content_type}, Accept: {accept_format}")
+        logging.info(f"Received message: {message}")
+        logging.info(f"Headers Received - Content-Type: {content_type}, Accept: {accept_format}")
         
         try:
             if content_type == "application/ssml+xml":
                 # Process the SSML message if needed
                 # For simplicity, we assume gTTS can handle SSML directly in this pseudo-code
-                print("Processing SSML input.")
+                logging.info("Processing SSML input.")
                 tts = gTTS(text=message, lang=language, slow=False, tld='com', lang_check=False)
             else:
-                print("Processing plain text input.")
+                logging.info("Processing plain text input.")
                 tts = gTTS(text=message, lang=language)
 
             buffer_ = io.BytesIO()
@@ -34,31 +35,38 @@ async def speak(websocket, path, language):
             audio = AudioSegment.from_file(buffer_, format='mp3')
             buffer2_ = io.BytesIO()
             if 'sln16' in accept_format:
-                print(f"Converting to signed 16bit pcm audio 8000hz")
-                audio.export(buffer2_, format='s16', codec='pcm_s16le', parameters=["-ar", "8000"])
+                logging.info(f"Converting to signed 16bit pcm audio 8000hz")
+                audio.export(buffer2_, format='s16le', codec='pcm_s16le', parameters=["-ar", "8000"])
             else:
-                print(f"Converting to mp3 audio")
+                logging.info(f"Converting to mp3 audio")
                 audio.export(buffer2_, format='mp3')
 
             buffer2_.seek(0)
             audio_data = buffer2_.read()
-            print(f"Generated audio length: {len(audio_data)} bytes")
+            logging.info(f"Generated audio length: {len(audio_data)} bytes")
 
             # Send base64-encoded audio data
             await websocket.send(audio_data)
-            print(f"Sent audio data for: {message[:30]}... (truncated for log)")
+            logging.info(f"Sent audio data for: {message[:30]}... (truncated for log)")
         except Exception as e:
-            print(f"Error during text-to-speech conversion: {e}")
+            logging.error(f"Error during text-to-speech conversion:",e)
             await websocket.send("Error converting text to speech")
 
 async def main():
+    # Enable loging if needed
+    #
+    # logger = logging.getLogger('websockets')
+    # logger.setLevel(logging.INFO)
+    # logger.addHandler(logging.StreamHandler())
+    logging.basicConfig(level=logging.INFO)
+
     parser = argparse.ArgumentParser(description="WebSocket server with text-to-speech")
     parser.add_argument("--port", type=int, default=int(os.getenv("PORT", 2600)), help="TCP port for the server")
     parser.add_argument("--host", type=str, default=os.getenv("HOST", "0.0.0.0"), help="Host IP for the server")
     parser.add_argument("--lang", type=str, default=os.getenv("TTS_LANG", "en"), help="TTS language voice to use")
     args = parser.parse_args()
     
-    print(f"Starting TTS server on {args.host}:{args.port} with language: {args.lang}")
+    logging.info(f"Starting TTS server on {args.host}:{args.port} with language: {args.lang}")
     async with websockets.serve(partial(speak, language=args.lang), args.host, args.port):
         await asyncio.Future()  # run server forever
 

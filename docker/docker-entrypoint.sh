@@ -12,7 +12,7 @@ if [ "$1" = 'freeswitch' ]; then
         cp -varf /usr/share/freeswitch/conf/minimal/* /usr/local/freeswitch/conf/
     fi
 
-    chown -R freeswitch:freeswitch /usr/local/freeswitch/conf
+    #chown -R freeswitch:freeswitch /usr/local/freeswitch/conf
     chown -R freeswitch:freeswitch /var/run/freeswitch
     chown -R freeswitch:freeswitch /var/lib/freeswitch
     
@@ -21,8 +21,10 @@ if [ "$1" = 'freeswitch' ]; then
             [ -f "$f" ] && . "$f"
         done
     fi
-    
+    trap '/usr/bin/freeswitch -stop' SIGTERM
     exec /usr/bin/freeswitch -u freeswitch -g freeswitch -nonat -nf -c -nonatmap
+    pid="$!"
+    #wait $pid
 fi
 
 exec "$@"

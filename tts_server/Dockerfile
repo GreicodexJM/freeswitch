@@ -9,4 +9,4 @@ COPY . .
 ENV PORT=2600
 ENV HOST=0.0.0.0
 ENV TTS_LANG=en
-CMD [ "python", "./app.py" ]
+CMD [ "python", "./tts_server.py" ]
